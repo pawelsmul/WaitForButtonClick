@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wait For Button Click</title>
+</head>
+<body>
+<button class="first-button">First Button</button>
+<button class="second-button">Second Button</button>
+<button class="third-button">Button 3</button>
+
+<script>
+    function waitForButtonsToBeClicked(buttons) {
+        const promises = buttons.map(button => {
+            return new Promise((resolve, reject) => {
+                if (!button) {
+                    reject('One of the provided buttons does not exist');
+                }
+                button.addEventListener('click', () => {
+                    resolve(button);
+                });
+            });
+        });
+        return Promise.race(promises);
+    }
+
+    const firstButton = document.querySelector('.first-button');
+    const secondButton = document.querySelector('.second-button');
+
+    waitForButtonsToBeClicked([firstButton, secondButton])
+        .then(clickedButton => {
+            console.log('Button was clicked!', clickedButton);
+        })
+        .catch(() => {
+            console.log('One of the provided buttons does not exist');
+        });
+</script>
+</body>
+</html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>To-Do List App</title>-->
+<!--    <style>-->
+<!--        .container {-->
+<!--            display: flex;-->
+<!--        }-->
+
+<!--        .column {-->
+<!--            flex: 1;-->
+<!--            padding: 20px;-->
+<!--            background-color: #f2f2f2;-->
+<!--        }-->
+
+<!--        .task {-->
+<!--            margin-bottom: 10px;-->
+<!--            padding: 10px;-->
+<!--            background-color: white;-->
+<!--            border: 1px solid #ccc;-->
+<!--        }-->
+
+<!--        .completed {-->
+<!--            text-decoration: line-through;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <div class="column" id="toDoColumn">-->
+<!--        <h3>To Do</h3>-->
+<!--        <ul id="toDoList"></ul>-->
+<!--    </div>-->
+<!--    <div class="column" id="alreadyDoneColumn">-->
+<!--        <h3>Already Done</h3>-->
+<!--        <ul id="alreadyDoneList"></ul>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div>-->
+<!--    <input type="text" id="taskInput" placeholder="Enter task name">-->
+<!--    <button id="addButton">Add Task</button>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    const toDoList = document.getElementById('toDoList');-->
+<!--    const alreadyDoneList = document.getElementById('alreadyDoneList');-->
+<!--    const addButton = document.getElementById('addButton');-->
+<!--    const taskInput = document.getElementById('taskInput');-->
+
+<!--    const baseUrl = 'https://jsonplaceholder.typicode.com/todos';-->
+
+<!--    // Fetch tasks from the server-->
+<!--    function fetchTasks() {-->
+<!--        fetch(baseUrl)-->
+<!--            .then(response => response.json())-->
+<!--            .then(data => {-->
+<!--                data.forEach(task => {-->
+<!--                    const taskElement = createTaskElement(task);-->
+<!--                    if (task.completed) {-->
+<!--                        alreadyDoneList.appendChild(taskElement);-->
+<!--                    } else {-->
+<!--                        toDoList.appendChild(taskElement);-->
+<!--                    }-->
+<!--                });-->
+<!--            })-->
+<!--            .catch(error => {-->
+<!--                console.error('Error fetching tasks:', error);-->
+<!--            });-->
+<!--    }-->
+
+<!--    // Add a new task-->
+<!--    function addTask() {-->
+<!--        const taskName = taskInput.value.trim();-->
+
+<!--        if (taskName !== '') {-->
+<!--            const newTask = {-->
+<!--                title: taskName,-->
+<!--                completed: false-->
+<!--            };-->
+
+<!--            fetch(baseUrl, {-->
+<!--                method: 'POST',-->
+<!--                headers: {-->
+<!--                    'Content-Type': 'application/json'-->
+<!--                },-->
+<!--                body: JSON.stringify(newTask)-->
+<!--            })-->
+<!--                .then(response => response.json())-->
+<!--                .then(task => {-->
+<!--                    const taskElement = createTaskElement(task);-->
+<!--                    toDoList.appendChild(taskElement);-->
+<!--                    taskInput.value = '';-->
+<!--                })-->
+<!--                .catch(error => {-->
+<!--                    console.error('Error adding task:', error);-->
+<!--                });-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Delete a completed task-->
+<!--    function deleteTask(event) {-->
+<!--        const taskElement = event.target.closest('.task');-->
+<!--        if (taskElement) {-->
+<!--            const taskId = taskElement.dataset.taskId;-->
+
+<!--            fetch(`${baseUrl}/${taskId}`, {-->
+<!--                method: 'DELETE'-->
+<!--            })-->
+<!--                .then(() => {-->
+<!--                    taskElement.remove();-->
+<!--                })-->
+<!--                .catch(error => {-->
+<!--                    console.error('Error deleting task:', error);-->
+<!--                });-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Create a task element-->
+<!--    function createTaskElement(task) {-->
+<!--        const taskElement = document.createElement('li');-->
+<!--        taskElement.className = 'task';-->
+<!--        taskElement.dataset.taskId = task.id;-->
+<!--        taskElement.textContent = task.title;-->
+
+<!--        if (task.completed) {-->
+<!--            taskElement.classList.add('completed');-->
+<!--        }-->
+
+<!--        taskElement.addEventListener('click', deleteTask);-->
+
+<!--        return taskElement;-->
+<!--    }-->
+
+<!--    // Add event listener to the "Add Task" button-->
+<!--    addButton.addEventListener('click', addTask);-->
+
+<!--    // Fetch tasks when the page loads-->
+<!--    fetchTasks();-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html>&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>User List</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <style>&ndash;&gt;-->
+<!--&lt;!&ndash;        #user-container {&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-top: 20px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .user-row {&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-bottom: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .user-row span {&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-right: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;        .user-row button {&ndash;&gt;-->
+<!--&lt;!&ndash;            margin-left: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    </style>&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body>&ndash;&gt;-->
+<!--&lt;!&ndash;<h1>User List</h1>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div id="user-container"></div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<button class="first-button">Button 1</button>&ndash;&gt;-->
+<!--&lt;!&ndash;<button class="second-button">Button 2</button>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<script>&ndash;&gt;-->
+<!--&lt;!&ndash;    function waitForButtonsToBeClicked(buttons) {&ndash;&gt;-->
+<!--&lt;!&ndash;        return new Promise((resolve, reject) => {&ndash;&gt;-->
+<!--&lt;!&ndash;            const buttonClickHandler = (event) => {&ndash;&gt;-->
+<!--&lt;!&ndash;                const clickedButton = buttons.find((button) => button === event.target);&ndash;&gt;-->
+<!--&lt;!&ndash;                if (clickedButton) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    resolve(clickedButton);&ndash;&gt;-->
+<!--&lt;!&ndash;                } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                    reject(new Error('One of the provided buttons does not exist'));&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            };&ndash;&gt;-->
+
+<!--&lt;!&ndash;            buttons.forEach((button) => {&ndash;&gt;-->
+<!--&lt;!&ndash;                button.addEventListener('click', buttonClickHandler);&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+<!--&lt;!&ndash;        });&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    function deleteUser(userId) {&ndash;&gt;-->
+<!--&lt;!&ndash;        // Send DELETE request to the appropriate endpoint using the provided userId&ndash;&gt;-->
+<!--&lt;!&ndash;        // ...&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    function createRow(user) {&ndash;&gt;-->
+<!--&lt;!&ndash;        const row = document.createElement('div');&ndash;&gt;-->
+<!--&lt;!&ndash;        row.classList.add('user-row');&ndash;&gt;-->
+<!--&lt;!&ndash;        const nameElement = document.createElement('span');&ndash;&gt;-->
+<!--&lt;!&ndash;        const emailElement = document.createElement('span');&ndash;&gt;-->
+<!--&lt;!&ndash;        const deleteButton = document.createElement('button');&ndash;&gt;-->
+
+<!--&lt;!&ndash;        nameElement.textContent = user.name;&ndash;&gt;-->
+<!--&lt;!&ndash;        emailElement.textContent = user.email;&ndash;&gt;-->
+<!--&lt;!&ndash;        deleteButton.textContent = 'Delete';&ndash;&gt;-->
+
+<!--&lt;!&ndash;        deleteButton.addEventListener('click', () => {&ndash;&gt;-->
+<!--&lt;!&ndash;            deleteUser(user.id); // Assuming each user object has a unique "id" property&ndash;&gt;-->
+<!--&lt;!&ndash;            row.remove(); // Remove the row from the DOM after deleting the user&ndash;&gt;-->
+<!--&lt;!&ndash;        });&ndash;&gt;-->
+
+<!--&lt;!&ndash;        row.appendChild(nameElement);&ndash;&gt;-->
+<!--&lt;!&ndash;        row.appendChild(emailElement);&ndash;&gt;-->
+<!--&lt;!&ndash;        row.appendChild(deleteButton);&ndash;&gt;-->
+
+<!--&lt;!&ndash;        return row;&ndash;&gt;-->
+<!--&lt;!&ndash;    }&ndash;&gt;-->
+
+<!--&lt;!&ndash;    const userContainer = document.querySelector('#user-container');&ndash;&gt;-->
+
+<!--&lt;!&ndash;    fetch('https://jsonplaceholder.typicode.com/users')&ndash;&gt;-->
+<!--&lt;!&ndash;        .then((response) => response.json())&ndash;&gt;-->
+<!--&lt;!&ndash;        .then((users) => {&ndash;&gt;-->
+<!--&lt;!&ndash;            users.forEach((user) => {&ndash;&gt;-->
+<!--&lt;!&ndash;                const row = createRow(user);&ndash;&gt;-->
+<!--&lt;!&ndash;                userContainer.appendChild(row);&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+<!--&lt;!&ndash;        })&ndash;&gt;-->
+<!--&lt;!&ndash;        .catch((error) => {&ndash;&gt;-->
+<!--&lt;!&ndash;            console.log('Error fetching users:', error);&ndash;&gt;-->
+<!--&lt;!&ndash;        });&ndash;&gt;-->
+
+<!--&lt;!&ndash;    const firstButton = document.querySelector('.first-button');&ndash;&gt;-->
+<!--&lt;!&ndash;    const secondButton = document.querySelector('.second-button');&ndash;&gt;-->
+
+<!--&lt;!&ndash;    waitForButtonsToBeClicked([firstButton, secondButton])&ndash;&gt;-->
+<!--&lt;!&ndash;        .then((clickedButton) => {&ndash;&gt;-->
+<!--&lt;!&ndash;            console.log('Button was clicked!', clickedButton);&ndash;&gt;-->
+<!--&lt;!&ndash;        })&ndash;&gt;-->
+<!--&lt;!&ndash;        .catch((error) => {&ndash;&gt;-->
+<!--&lt;!&ndash;            console.log(error.message);&ndash;&gt;-->
+<!--&lt;!&ndash;        });&ndash;&gt;-->
+<!--&lt;!&ndash;</script>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
